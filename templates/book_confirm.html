@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Confirm Booking{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-3">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <i class="bi bi-check2-square"></i> Confirm Your Appointment
+      </div>
+      <div class="card-body p-4">
+        <p class="text-muted mb-4">Please review your appointment details before confirming.</p>
+
+        <div class="table-responsive mb-4">
+          <table class="table table-bordered">
+            <tbody>
+              <tr>
+                <th class="bg-light w-40">Applicant Name</th>
+                <td>{{ user.name }}</td>
+              </tr>
+              <tr>
+                <th class="bg-light">Email</th>
+                <td>{{ user.email }}</td>
+              </tr>
+              <tr>
+                <th class="bg-light">Date</th>
+                <td><strong>{{ slot.date.strftime('%d %B %Y') }}</strong></td>
+              </tr>
+              <tr>
+                <th class="bg-light">Time</th>
+                <td>{{ slot.time }}</td>
+              </tr>
+              <tr>
+                <th class="bg-light">Location</th>
+                <td>{{ slot.location }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="alert alert-info">
+          <i class="bi bi-envelope"></i>
+          A confirmation email will be sent to <strong>{{ user.email }}</strong> after booking.
+        </div>
+
+        <div class="d-flex gap-2">
+          <form method="POST" class="flex-grow-1">
+            <button type="submit" class="btn btn-gold w-100">
+              <i class="bi bi-calendar-check"></i> Confirm Booking
+            </button>
+          </form>
+          <a href="{{ url_for('view_slots') }}" class="btn btn-outline-secondary flex-grow-1">
+            <i class="bi bi-arrow-left"></i> Go Back
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

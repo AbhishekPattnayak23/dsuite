@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<div class="mb-4">
+  <h4 class="fw-bold mb-0" style="color:var(--navy)"><i class="bi bi-speedometer2"></i> Admin Dashboard</h4>
+  <small class="text-muted">Overview of the Passport Appointment System</small>
+</div>
+
+<!-- Stat Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card stat-card p-3">
+      <div class="stat-num">{{ total_users }}</div>
+      <div class="text-muted small"><i class="bi bi-people"></i> Registered Users</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card stat-card p-3">
+      <div class="stat-num">{{ total_slots }}</div>
+      <div class="text-muted small"><i class="bi bi-calendar3"></i> Total Slots</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card stat-card p-3">
+      <div class="stat-num text-success">{{ available_slots }}</div>
+      <div class="text-muted small"><i class="bi bi-calendar-check"></i> Available Slots</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card stat-card p-3">
+      <div class="stat-num text-danger">{{ booked_slots }}</div>
+      <div class="text-muted small"><i class="bi bi-calendar-x"></i> Booked Slots</div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Bookings -->
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span><i class="bi bi-activity"></i> Recent Bookings</span>
+    <a href="{{ url_for('admin_bookings') }}" class="btn btn-sm btn-light">View All</a>
+  </div>
+  <div class="card-body p-0">
+    {% if recent_bookings %}
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Ref</th><th>User</th><th>Email</th><th>Date</th><th>Time</th><th>Location</th><th>Booked On</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for appt, user, slot in recent_bookings %}
+          <tr>
+            <td><span class="badge bg-secondary font-monospace">{{ appt.booking_ref }}</span></td>
+            <td>{{ user.name }}</td>
+            <td class="text-muted small">{{ user.email }}</td>
+            <td>{{ slot.date.strftime('%d %b %Y') }}</td>
+            <td>{{ slot.time }}</td>
+            <td>{{ slot.location }}</td>
+            <td class="text-muted small">{{ appt.booking_date.strftime('%d %b %H:%M') }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="text-center py-4 text-muted">No bookings yet.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
