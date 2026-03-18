@@ -1,65 +1,45 @@
 import pytest
-from fastapi.testclient import TestClient
-from app import app
-from database import engine, Base
+from datetime import datetime, timedelta
+from slot import SlotCreate
+from slot_service import SlotService
 
-Base.metadata.create_all(bind=engine)
+@pytest.fixture
+def slot_service():
+    return SlotService()
 
-client = TestClient(app)
+@pytest.fixture
+def test_slot_data():
+    return SlotCreate(
+        start_time=datetime.now() + timedelta(days=1, hours=9),
+        end_time=datetime.now() + timedelta(days=1, hours=17),
+        therapist_id="therapist@example.com"
+    )
 
-def test_create_slot():
-    response = client.post("/api/slots/", json={
-        "start_time": "2024-01-01T09:00:00",
-        "end_time": "2024-01-01T10:00:00",
-        "is_available": True,
-        "slot_type": "premium"
-    })
-    assert response.status_code == 201
-    assert response.json()["slot_type"] == "premium"
+@pytest.mark.asyncio
+async def test_create_slot(slot_service, test_slot_data):
+    slot = await slot_service.create_slot(test_slot_data)
+    assert slot.therapist_id == "therapist@example.com"
 
-def test_get_slots():
-    response = client.get("/api/slots/")
-    assert response.status_code == 200
-    assert isinstance(response.json(), list)
+@pytest.mark.asyncio
+async def test_get_available_slots(slot_service, test_slot_data):
+    await slot_service.create_slot(test_slot_data)
 
-def test_get_slot():
-    # First create a slot
-    create_response = client.post("/api/slots/", json={
-        "start_time": "2024-01-02T09:00:00",
-        "end_time": "2024-01-02T10:00:00",
-        "is_available": True
-    })
-    slot_id = create_response.json()["id"]
+    date = datetime.now() + timedelta(days=1)
+    slots = await slot_service.get_available_slots("therapist@example.com", date)
 
-    response = client.get(f"/api/slots/{slot_id}")
-    assert response.status_code == 200
-    assert response.json()["id"] == slot_id
+    assert len(slots) > 0
+    assert slots[0].is_available == True
 
-def test_update_slot():
-    # Create slot
-    create_response = client.post("/api/slots/", json={
-        "start_time": "2024-01-03T09:00:00",
-        "end_time": "2024-01-03T10:00:00"
-    })
-    slot_id = create_response.json()["id"]
+@pytest.mark.asyncio
+async def test_book_and_cancel_slot(slot_service, test_slot_data):
+    slot = await slot_service.create_slot(test_slot_data)
 
-    response = client.put(f"/api/slots/{slot_id}", json={
-        "slot_type": "special"
-    })
-    assert response.status_code == 200
-    assert response.json()["slot_type"] == "special"
+    # Book slot
+    booked = await slot_service.book_slot(slot.id, "appointment123")
+    assert booked.is_available == False
+    assert booked.appointment_id == "appointment123"
 
-def test_delete_slot():
-    # Create slot
-    create_response = client.post("/api/slots/", json={
-        "start_time": "2024-01-04T09:00:00",
-        "end_time": "2024-01-04T10:00:00"
-    })
-    slot_id = create_response.json()["id"]
-
-    response = client.delete(f"/api/slots/{slot_id}")
-    assert response.status_code == 204
-
-    # Verify deletion
-    get_response = client.get(f"/api/slots/{slot_id}")
-    assert get_response.status_code == 404
+    # Cancel booking
+    cancelled = await slot_service.cancel_slot_booking(slot.id)
+    assert cancelled.is_available == True
+    assert cancelled.appointment_id is None
