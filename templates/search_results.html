@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - Passport Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="{{ url_for('routes.home') }}">Home</a>
+            <a href="{{ url_for('auth.logout') }}">Logout</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Search Results</h1>
+
+        <div id="search-form">
+            <input type="text" id="location" placeholder="Location" value="{{ request.args.get('location', '') }}">
+            <input type="date" id="date" value="{{ request.args.get('date', '') }}">
+            <button onclick="searchSlots()">Search</button>
+        </div>
+
+        <div id="results-container">
+            {% if slots %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Location</th>
+                            <th>Date</th>
+                            <th>Capacity</th>
+                            <th>Available</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for slot in slots %}
+                        <tr>
+                            <td>{{ slot.location }}</td>
+                            <td>{{ slot.date }}</td>
+                            <td>{{ slot.capacity }}</td>
+                            <td>{{ slot.available }}</td>
+                            <td>
+                                {% if slot.available > 0 %}
+                                    <button onclick="bookSlot({{ slot.id }})" {% if slot.id in booked_slots %}disabled{% endif %}>
+                                        {% if slot.id in booked_slots %}Booked{% else %}Book{% endif %}
+                                    </button>
+                                {% else %}
+                                    <button disabled>Full</button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No slots found. Try adjusting your search criteria.</p>
+            {% endif %}
+        </div>
+    </main>
+
+    <script>
+        async function searchSlots() {
+            const location = document.getElementById('location').value;
+            const date = document.getElementById('date').value;
+
+            const url = new URL('/api/slots', window.location.origin);
+            if (location) url.searchParams.set('location', location);
+            if (date) url.searchParams.set('date', date);
+
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            });
+
+            const data = await response.json();
+            displayResults(data);
+        }
+
+        async function bookSlot(slotId) {
+            const response = await fetch('/api/appointments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                body: JSON.stringify({ slot_id: slotId })
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                window.location.href = '/booking-confirmation/' + result.appointment.id;
+            } else {
+                alert(result.error || 'Booking failed');
+            }
+        }
+
+        function displayResults(slots) {
+            const container = document.getElementById('results-container');
+            let html = '<table><thead><tr><th>Location</th><th>Date</th><th>Capacity</th><th>Available</th><th>Action</th></tr></thead><tbody>';
+
+            slots.forEach(slot => {
+                html += `<tr>
+                    <td>${slot.location}</td>
+                    <td>${slot.date}</td>
+                    <td>${slot.capacity}</td>
+                    <td>${slot.available}</td>
+                    <td>
+                        ${slot.available > 0 ?
+                            `<button onclick="bookSlot(${slot.id})">Book</button>` :
+                            '<button disabled>Full</button>'
+                        }
+                    </td>
+                </tr>`;
+            });
+
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
