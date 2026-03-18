@@ -1,1 +1,2 @@
-# Empty init to make app a package
+"""Main application package"""
+__version__ = "1.0.0"

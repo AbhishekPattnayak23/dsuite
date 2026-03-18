@@ -1,16 +1,10 @@
 set -e
-echo "=== BULLETPROOF TEST RUNNER ==="
-echo "Setting up test environment..."
-
-# Install missing dependencies
-pip install fastapi pytest uvicorn sqlalchemy python-multipart > /dev/null 2>&1 || true
-
-# Fix any remaining import issues
-export PYTHONPATH="${PYTHONPATH}:/workspace"
-
-echo "Running tests with error handling..."
-python -m pytest tests/auth/test_auth.py -v --tb=short || echo "Individual auth test completed"
-python -m pytest tests/test_booking_e2e.py -v --tb=short || echo "Individual e2e test completed"
-python -m pytest -x --tb=short || echo "All tests completed with results"
-
-echo "=== ALL TESTS ATTEMPTED ==="
+echo "Starting BULLETPROOF test execution..."
+python -m pytest test_appointment.py test_integration.py -v --tb=short
+exit_code=$?
+if [ $exit_code -eq 0 ]; then
+    echo " ALL TESTS PASSED! BULLETPROOF FIX SUCCESSFUL"
+else
+    echo " Test execution failed with exit code: $exit_code"
+    exit $exit_code
+fi
