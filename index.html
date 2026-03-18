@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="space-y-6">
+    <!-- Location Selector -->
+    <div>
+        <label class="block text-sm font-medium mb-2">Select Location</label>
+        <select class="w-full p-3 border rounded" id="location-select">
+            <option value="">Choose appointment location</option>
+            <option value="delhi">Delhi Regional Office</option>
+            <option value="mumbai">Mumbai Regional Office</option>
+            <option value="bangalore">Bangalore Regional Office</option>
+        </select>
+    </div>
+
+    <!-- Slot CTA -->
+    <div class="text-center">
+        <button class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700" id="cta-button">
+            Find Available Slots
+        </button>
+    </div>
+
+    <!-- Date Picker -->
+    <div>
+        <label class="block text-sm font-medium mb-2">Select Date</label>
+        <input type="date" class="w-full p-3 border rounded" id="date-picker">
+    </div>
+
+    <!-- Slot Cards -->
+    <div id="slot-cards" class="grid gap-4 md:grid-cols-3">
+        <!-- Dynamic content -->
+    </div>
+
+    <!-- Live Badge -->
+    <div class="fixed top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full">
+        <span class="inline-block w-2 h-2 bg-white rounded-full mr-2"></span>
+        Live
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+{% endblock %}

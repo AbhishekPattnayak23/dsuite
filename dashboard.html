@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="space-y-6">
+    <h2 class="text-3xl font-bold">Admin Dashboard</h2>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-4 right-4 space-y-2">
+        <!-- Toast messages appear here -->
+    </div>
+
+    <!-- Booking References -->
+    <div class="bg-white p-6 rounded shadow">
+        <h3 class="text-xl font-semibold mb-4">Recent Bookings</h3>
+        <div class="space-y-2">
+            <div class="p-2 border rounded">Reference: BK-2024-001</div>
+            <div class="p-2 border rounded">Reference: BK-2024-002</div>
+        </div>
+    </div>
+
+    <!-- Create Slot Button -->
+    <a href="/admin/slots/create" class="bg-green-600 text-white px-4 py-2 rounded">
+        Create New Slot
+    </a>
+</div>

@@ -1,0 +1,38 @@
+.live-icon {
+    display: inline-block;
+    padding: 0.25em 0.5em;
+    font-size: 0.875em;
+    color: #fff;
+    background-color: #198754;
+    border-radius: 0.25rem;
+}
+
+#slot-cta {
+    background-color: #0a58ca;
+    border-color: #0a58ca;
+    font-weight: bold;
+}
+
+#slot-cards .card {
+    transition: transform 0.2s;
+}
+
+#slot-cards .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.slots-container {
+    margin-top: 2rem;
+}
+
+.booking-card {
+    margin-bottom: 1rem;
+}
+
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+}

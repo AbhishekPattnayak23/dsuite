@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Book Your Passport Appointment</h2>
+    <span id="live-badge" class="badge bg-success">LIVE</span>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <label for="location-select" class="form-label">Location</label>
+        <select id="location-select" class="form-select">
+            <option value="">Select location</option>
+            <option value="london">London</option>
+            <option value="manchester">Manchester</option>
+            <option value="birmingham">Birmingham</option>
+            <option value="glasgow">Glasgow</option>
+        </select>
+    </div>
+    <div class="col-md-4">
+        <label for="date-picker" class="form-label">Date</label>
+        <input id="date-picker" type="date" class="form-control">
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+        <button id="slot-cta" class="btn btn-primary w-100">Book now</button>
+    </div>
+</div>
+
+<div id="slot-cards" class="row">
+    <!-- Slot cards will be populated by JavaScript -->
+</div>
+
+{% if bookings %}
+<div class="mt-5">
+    <h4>Your Bookings</h4>
+    <div class="row">
+        {% for booking in bookings %}
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ booking.location }}</h5>
+                    <p class="card-text">
+                        Date: {{ booking.start_time[:10] }}<br>
+                        Time: {{ booking.start_time[11:16] }} - {{ booking.end_time[11:16] }}
+                    </p>
+                    <button class="btn btn-danger btn-sm" onclick="cancelBooking({{ booking.booking_id }})">Cancel</button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<div id="booking-references" data-bookings='{{ bookings | tojson | safe }}' style="display: none;"></div>
+{% endblock %}

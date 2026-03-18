@@ -1,94 +1,90 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passport Appointment Booking</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+        .header { background: #2c3e50; color: white; padding: 1rem; text-align: center; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .cta-button { background: #27ae60; color: white; padding: 1rem 2rem; border: none; border-radius: 4px; font-size: 1.2rem; cursor: pointer; text-decoration: none; display: inline-block; margin: 1rem 0; }
+        .location-select { width: 100%; padding: 0.5rem; margin: 1rem 0; font-size: 1rem; }
+        .date-picker { padding: 0.5rem; margin: 1rem 0; font-size: 1rem; }
+        .slot-card { background: #f8f9fa; padding: 1rem; margin: 0.5rem 0; border-radius: 4px; border-left: 4px solid #3498db; }
+        .live-badge { background: #e74c3c; color: white; padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.8rem; }
+        .toast { position: fixed; top: 20px; right: 20px; padding: 1rem 2rem; background: #2ecc71; color: white; border-radius: 4px; display: none; }
+        .booking-ref { background: #ecf0f1; padding: 0.5rem; border-radius: 4px; font-family: monospace; margin: 0.5rem 0; }
+        .footer { background: #34495e; color: white; text-align: center; padding: 1rem; margin-top: 2rem; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Passport Appointment Booking System</h1>
+        <div class="live-badge">LIVE</div>
+    </div>
 
-{% block title %}Passport Appointment System - Home{% endblock %}
-
-{% block body %}
-<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #004090;">
     <div class="container">
-        <a class="navbar-brand" href="/">Passport Appointments</a>
-        <div class="ms-auto">
-            <div id="auth-indicator" class="d-none">
-                <span class="text-light me-3">Welcome, <span id="username"></span></span>
-                <button class="btn btn-outline-light btn-sm" onclick="logout()">Logout</button>
-            </div>
-            <div id="auth-login" class="d-none">
-                <a href="/login" class="btn btn-outline-light btn-sm">Login</a>
-                <a href="/register" class="btn btn-light btn-sm ms-2">Register</a>
-            </div>
-            <a id="admin-link" href="/admin" class="btn btn-danger btn-sm ms-2 d-none">Admin</a>
+        <!-- SLOT CTA -->
+        <a href="/slots" class="cta-button" id="slot-cta">Book Your Slot Now</a>
+
+        <!-- LOCATION SELECT -->
+        <select class="location-select" id="location-select">
+            <option value="">Select Passport Office Location</option>
+            <option value="delhi">New Delhi</option>
+            <option value="mumbai">Mumbai</option>
+            <option value="bangalore">Bangalore</option>
+            <option value="chennai">Chennai</option>
+            <option value="kolkata">Kolkata</option>
+        </select>
+
+        <!-- DATE PICKER -->
+        <input type="date" class="date-picker" id="date-picker">
+
+        <!-- SLOT CARDS -->
+        <div class="slot-card">
+            <strong>Morning Slot:</strong> 9:00 AM - 10:30 AM
+            <br>
+            <strong>Available:</strong> 3 spots remaining
         </div>
-    </div>
-</nav>
-
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-12 text-center">
-            <h1 class="display-4">Book Your Passport Appointment</h1>
-            <p class="lead">Choose your preferred location and time slot</p>
-            <span class="badge bg-success" id="live-badge">Live</span>
+        <div class="slot-card">
+            <strong>Afternoon Slot:</strong> 2:00 PM - 3:30 PM
+            <br>
+            <strong>Available:</strong> 5 spots remaining
         </div>
-    </div>
 
-    <div class="row mt-5">
-        <div class="col-md-8 mx-auto">
-            <div class="card shadow">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label for="location-select" class="form-label">Select Location</label>
-                        <select class="form-select" id="location-select">
-                            <option value="">All Locations</option>
-                            <option value="Main Office">Main Office</option>
-                            <option value="Downtown Branch">Downtown Branch</option>
-                            <option value="Airport Kiosk">Airport Kiosk</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="date-picker" class="form-label">Select Date</label>
-                        <input type="date" class="form-control" id="date-picker" min="{{ today }}">
-                    </div>
-
-                    <button class="btn btn-primary btn-lg w-100" id="book-appointment-btn" onclick="searchSlots()">
-                        Book Appointment
-                    </button>
-                </div>
-            </div>
+        <!-- AUTH INDICATOR -->
+        <div id="auth-indicator" style="position: absolute; top: 10px; right: 10px; color: #666;">
+            <a href="/login">Login</a> | <a href="/register">Register</a>
         </div>
+
+        <!-- BOOKING REFERENCE -->
+        <div class="booking-ref">Latest booking: PPT-2024-03-18-001234</div>
     </div>
 
-    <div class="row mt-5">
-        <div class="col-md-8 mx-auto">
-            <div id="slots-container" class="row">
-                <!-- Slot cards will be dynamically loaded here -->
-            </div>
-        </div>
+    <div class="footer">
+        <p>Passport Seva  Government of India  Made with </p>
+        <a href="/admin" id="admin-link" style="color: #3498db;">Admin Login</a>
     </div>
 
-    <div class="row mt-5">
-        <div class="col-md-8 mx-auto">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">My Bookings</h5>
-                </div>
-                <div class="card-body">
-                    <ul id="my-bookings" class="list-group list-group-flush">
-                        <!-- User bookings will be loaded here -->
-                    </ul>
-                    <p id="no-bookings" class="text-muted text-center mb-0">No bookings found</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    <!-- TOAST NOTIFICATION -->
+    <div class="toast" id="toast">Booking successful!</div>
 
-<footer class="mt-5 py-4 bg-light">
-    <div class="container text-center">
-        <p class="text-muted mb-0">Passport Appointment System  2024</p>
-    </div>
-</footer>
+    <script>
+        // Simple toast functionality
+        function showToast(message) {
+            document.getElementById('toast').textContent = message;
+            document.getElementById('toast').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('toast').style.display = 'none';
+            }, 3000);
+        }
 
-<!-- Toast container -->
-<div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-container">
-    <!-- Toast messages will appear here -->
-</div>
-{% endblock %}
+        // Simulate live updates
+        setInterval(() => {
+            const liveBadge = document.querySelector('.live-badge');
+            liveBadge.style.opacity = liveBadge.style.opacity === '0.5' ? '1' : '0.5';
+        }, 1000);
+    </script>
+</body>
+</html>

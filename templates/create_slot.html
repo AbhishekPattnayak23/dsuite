@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-md mx-auto mt-10">
+    <div class="bg-white p-8 rounded shadow">
+        <h2 class="text-2xl font-bold mb-6">Create New Slot</h2>
+        <form method="POST">
+            <label class="block mb-2">Date</label>
+            <input type="date" name="date" class="w-full p-3 border rounded mb-4" required>
+
+            <label class="block mb-2">Time</label>
+            <input type="time" name="time" class="w-full p-3 border rounded mb-4" required>
+
+            <label class="block mb-2">Capacity</label>
+            <input type="number" name="capacity" value="10" class="w-full p-3 border rounded mb-4" required>
+
+            <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700">
+                Create Slot
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

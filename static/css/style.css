@@ -1,0 +1,21 @@
+.live-badge {
+    background: #28a745;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+.slot-card:hover {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.cta-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #f8f9fa;
+    padding: 1rem;
+    text-align: center;
+}
