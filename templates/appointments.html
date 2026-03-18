@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h2>My Appointments</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Location</th>
+                    <th>Date</th>
+                    <th>Booked</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="appointmentsTable"></tbody>
+        </table>
+    </div>
+</div>
+<script>
+async function loadAppointments() {
+    const res = await fetch('/api/appointments/me');
+    const apps = await res.json();
+    const tbody = document.getElementById('appointmentsTable');
+    tbody.innerHTML = apps.map(a => `
+        <tr>
+            <td>${a.slot.location}</td>
+            <td>${a.slot.date}</td>
+            <td>${a.booked_at}</td>
+            <td><button class="btn btn-sm btn-danger" onclick="cancelAppointment(${a.id})">Cancel</button></td>
+        </tr>
+    `).join('');
+}
+
+async function cancelAppointment(id) {
+    await fetch(`/api/appointments/${id}`, {method: 'DELETE'});
+    loadAppointments();
+}
+
+loadAppointments();
+</script>
+{% endblock %}
