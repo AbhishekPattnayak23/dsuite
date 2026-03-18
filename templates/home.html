@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Passport Appointment System - Home{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #004090;">
+    <div class="container">
+        <a class="navbar-brand" href="/">Passport Appointments</a>
+        <div class="ms-auto">
+            <div id="auth-indicator" class="d-none">
+                <span class="text-light me-3">Welcome, <span id="username"></span></span>
+                <button class="btn btn-outline-light btn-sm" onclick="logout()">Logout</button>
+            </div>
+            <div id="auth-login" class="d-none">
+                <a href="/login" class="btn btn-outline-light btn-sm">Login</a>
+                <a href="/register" class="btn btn-light btn-sm ms-2">Register</a>
+            </div>
+            <a id="admin-link" href="/admin" class="btn btn-danger btn-sm ms-2 d-none">Admin</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1 class="display-4">Book Your Passport Appointment</h1>
+            <p class="lead">Choose your preferred location and time slot</p>
+            <span class="badge bg-success" id="live-badge">Live</span>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="location-select" class="form-label">Select Location</label>
+                        <select class="form-select" id="location-select">
+                            <option value="">All Locations</option>
+                            <option value="Main Office">Main Office</option>
+                            <option value="Downtown Branch">Downtown Branch</option>
+                            <option value="Airport Kiosk">Airport Kiosk</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="date-picker" class="form-label">Select Date</label>
+                        <input type="date" class="form-control" id="date-picker" min="{{ today }}">
+                    </div>
+
+                    <button class="btn btn-primary btn-lg w-100" id="book-appointment-btn" onclick="searchSlots()">
+                        Book Appointment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-8 mx-auto">
+            <div id="slots-container" class="row">
+                <!-- Slot cards will be dynamically loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">My Bookings</h5>
+                </div>
+                <div class="card-body">
+                    <ul id="my-bookings" class="list-group list-group-flush">
+                        <!-- User bookings will be loaded here -->
+                    </ul>
+                    <p id="no-bookings" class="text-muted text-center mb-0">No bookings found</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="mt-5 py-4 bg-light">
+    <div class="container text-center">
+        <p class="text-muted mb-0">Passport Appointment System  2024</p>
+    </div>
+</footer>
+
+<!-- Toast container -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" id="toast-container">
+    <!-- Toast messages will appear here -->
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed - Passport Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="{{ url_for('routes.home') }}">Home</a>
+            <a href="{{ url_for('auth.logout') }}">Logout</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Booking Confirmed!</h1>
+
+        <div class="confirmation-card">
+            <h2>Your appointment details</h2>
+            <p><strong>Appointment ID:</strong> {{ appointment.id }}</p>
+            <p><strong>Location:</strong> {{ appointment.slot.location }}</p>
+            <p><strong>Date:</strong> {{ appointment.slot.date }}</p>
+            <p><strong>Booked at:</strong> {{ appointment.booked_at }}</p>
+
+            <div class="actions">
+                <a href="{{ url_for('routes.dashboard') }}">View My Appointments</a>
+                <a href="{{ url_for('routes.search') }}">Search More Slots</a>
+            </div>
+        </div>
+
+        <div class="email-note">
+            <p>A confirmation email has been sent to your registered email address.</p>
+        </div>
+    </main>
+</body>
+</html>
